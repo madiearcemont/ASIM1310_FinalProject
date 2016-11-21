@@ -2,7 +2,7 @@ class Snake {
   float x = random(0, width);
   float y = random(0, height);
   float xSpeed = 2;
-  float ySpeed = 2;
+  float ySpeed = 0;
   boolean up = false;
   boolean down = false;
   boolean left = false;
@@ -13,24 +13,27 @@ class Snake {
   //draw the snake (start with one square - appears randomly)
   void drawSnake() {
     fill(0, 225, 100);
-    rect(x, y, snakeSize, snakeSize); //*come back and randomize location later*
+    rect(x, y, snakeSize, snakeSize);
     checkEdges();
-    x = x+xSpeed;
-    y = y+ySpeed;
+
     //increase snake length by score
-    
     //for (int i = 0; i < snakelength; i=i+snakeSize) {
     //  rect(x, y, snakeSize, snakeSize);
     //  snakeSize=snakeSize+20;
     //}
   }
-  //start snake moving (random direction)
+
   void moveSnake() {
+    x = x+xSpeed;
+    y = y+ySpeed;
+  }
+
+  void checkDirection() {
     if (up == true) {
-      ySpeed = 2;
+      ySpeed = -2;
       xSpeed = 0;
     } else if (down == true) {
-      ySpeed = -2;
+      ySpeed = 2;
       xSpeed = 0;
     } else if (right == true) {
       xSpeed = 2;
@@ -41,17 +44,19 @@ class Snake {
     }
   }
 
-  //edge detection
   void checkEdges() {
     if (leftCollision()) {
-      xSpeed = -xSpeed;
+      xSpeed = 0;
+      ySpeed = -2;
     } else if (rightCollision()) {
-      xSpeed = -xSpeed;
-    }
-    if (topCollision()) {
-      ySpeed = -ySpeed;
+      xSpeed = 0;
+      ySpeed = 2;
+    } else if (topCollision()) {
+      ySpeed = 0;
+      xSpeed = 2;
     } else if (bottomCollision()) {
-      ySpeed = -ySpeed;
+      ySpeed = 0;
+      xSpeed = -2;
     }
   }
 
@@ -66,29 +71,5 @@ class Snake {
   }
   boolean bottomCollision() {
     return y >= height - snakeSize && ySpeed > 0;
-  }
-
-  void keyPressed() {
-    if (key == UP) {
-      up = true;
-      down = false;
-      right = false;
-      left = false;
-    } else if (key == DOWN) {
-      down = true;
-      up = false;
-      right = false;
-      left = false;
-    } else if (key == RIGHT) {
-      right = true;
-      left = false;
-      up = false;
-      down = false;
-    } else if (key == LEFT) {
-      left = true;
-      right = false;
-      up = false;
-      down = false;
-    }
   }
 }
