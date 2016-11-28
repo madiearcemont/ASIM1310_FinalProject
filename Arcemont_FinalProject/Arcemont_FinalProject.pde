@@ -14,23 +14,28 @@ Madie Arcemont
  Loss detection and game reset functionality. Typically, there is no way to “win” snake - 
  you just a score at the end that is how long the snake is.
  
- Week 1: implement classes to display the board, snake, and automatic movement of the snake 
- (in a straight line initially and then turning automatically at edges).
- Week 2: implement timer-based movement and keyboard handling.
- Week 3: implement the food square and snake growing functionality.
  Week 4: implement loss detection, score reporting, and a way to reset the game.
  */
 
 Snake mySnake = new Snake();
+Apple a;
+int appleX = round(random(0, width));
+int appleY = round(random(0, height));
+int snakeX = round(random(0, width));
+int snakeY = round(random(0, height));
+
 void setup() {
-  size(800, 600);
+  size(500, 500);
+  a = new Apple();
 }
 
 void draw() {
   background(0);
+  a.display();
   mySnake.drawSnake();
   mySnake.moveSnake();
   mySnake.checkEdges();
+  eatApple();
 }
 
 void keyPressed() {
@@ -54,5 +59,19 @@ void keyPressed() {
     mySnake.right = false;
     mySnake.up = false;
     mySnake.down = false;
-  } mySnake.checkDirection();
+  } 
+  mySnake.checkDirection();
+  if (key == ' ') {
+    mySnake.addLength();
+  }
+}
+
+void eatApple() {
+  if (snakeX > appleX && snakeX < appleX+ 30 && snakeY > appleY && snakeY < appleY+ 30) {
+    appleX = round(random(0, width));
+    appleY = round(random(0, height));
+    a.display();
+    mySnake.addLength();
+    println("eaten");
+  }
 }
