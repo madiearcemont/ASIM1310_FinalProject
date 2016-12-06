@@ -1,41 +1,49 @@
 /*
 Madie Arcemont
  Final Project: Snake Game
- 
- Requirements: 
- A grid-based model for the game environment. This should involve at least one new class definition.
- A Snake class to represent parts of the board currently belong to the snake’s body
- A method to represent where the next food square is. Each time one is eaten, a new one must appear. 
- Food squares should NEVER appear on top of the snake. In other words, if a square belongs to the snake’s body, 
- it is not a valid option to place the next food square.
- Handling keyboard input to control the direction the snake moves.
- Timer functionality to update the snake’s position and allow the user time to make a move before the next update. 
- The snake should move one square per some fixed amount of time.
- Loss detection and game reset functionality. Typically, there is no way to “win” snake - 
- you just a score at the end that is how long the snake is.
- 
- Week 4: implement loss detection, score reporting, and a way to reset the game.
+ ASIM 1310: Art & Code
  */
+ 
+ //Ask professor quick about timer-based movements
 
 Snake mySnake = new Snake();
 Apple a;
-int appleX = round(random(0, width));
-int appleY = round(random(0, height));
+int appleX = round(random(0, width-25));
+int appleY = round(random(0, height-25));
 int snakeX = round(random(0, width));
 int snakeY = round(random(0, height));
+boolean gamelost = false;
+boolean startscreen = true;
 
 void setup() {
-  size(500, 500);
+  size(400, 400);
   a = new Apple();
+  gamelost = false;
 }
 
 void draw() {
-  background(0);
-  a.display();
-  mySnake.drawSnake();
-  mySnake.moveSnake();
-  mySnake.checkEdges();
-  eatApple();
+  if (startscreen == true) {
+    startScreen();
+  } else if (startscreen == false) {
+    gameplay();
+  }
+}
+
+void gameplay() {
+  if (gamelost == false) {
+    background(0);
+    a.display();
+    mySnake.gamelost();
+    mySnake.drawSnake();
+    mySnake.moveSnake();
+    mySnake.checkEdges();
+    eatApple();
+    fill(255);
+    textSize(30);
+    text("Score: " + ((mySnake.snakeLength-20)/7), 0, height-30);
+  } else if (gamelost == true) {
+    gameOver();
+  }
 }
 
 void keyPressed() {
@@ -62,16 +70,49 @@ void keyPressed() {
   } 
   mySnake.checkDirection();
   if (key == ' ') {
-    mySnake.addLength();
+    startscreen = false;
+  }
+  if (key == ENTER) {
+    reset();
   }
 }
 
 void eatApple() {
-  if (snakeX > appleX && snakeX < appleX+ 30 && snakeY > appleY && snakeY < appleY+ 30) {
-    appleX = round(random(0, width));
-    appleY = round(random(0, height));
+  if (snakeX > appleX-5 && snakeX < appleX+ 30 && snakeY > appleY-5 && snakeY < appleY+ 30) {
+    appleX = round(random(0, width-30));
+    appleY = round(random(0, height-30));
     a.display();
     mySnake.addLength();
     println("eaten");
   }
+}
+
+void gameOver() {
+  background(255, 0, 0);
+  textSize(60);
+  text("Game Over!", 20, 60); //FIX THIS
+  textSize(20);
+  text("Your final score was " + ((mySnake.snakeLength-20)/7) + ".", 30, 120);
+  text("Hit enter to play again.", 35, 200);
+}
+
+void startScreen() {
+  background(0, 225, 100);
+  textSize(20);
+  fill(255);
+  text("Use the arrow keys to move the snake", 15, 20);
+  text("& make him eat the apples,", 65, 45);
+  text("but don't let him run into himself!", 35, 70);
+  text("You'll lose!", 140, 95);
+  text("Hit the spacebar to start the game!", 30, 200);
+  text("Hit enter at any time to return to", 40, 250);
+  text("this home screen.", 115, 275);
+}
+
+void reset() {
+  mySnake.snakeXs = new float [mySnake.snakeLength];
+  mySnake.snakeYs = new float [mySnake.snakeLength];
+  startscreen = true;
+  gamelost = false;
+  mySnake.snakeLength = 20;
 }

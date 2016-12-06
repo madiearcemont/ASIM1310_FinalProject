@@ -19,8 +19,6 @@ class Snake {
   }
   void drawSnake() {
     shiftDown();
-    snakeXs[0] = snakeX;
-    snakeYs[0] = snakeY;
     for (int i = 0; i < snakeLength; i++) {
       fill(0, 225, 100);
       noStroke();
@@ -30,6 +28,8 @@ class Snake {
   }
 
   void moveSnake() {
+    snakeXs[0] = snakeX;
+    snakeYs[0] = snakeY;
     snakeX = snakeX+xSpeed;
     snakeY = snakeY+ySpeed;
   }
@@ -82,7 +82,7 @@ class Snake {
   void addLength() {
     float[] tempXs = new float[snakeLength];
     float[] tempYs = new float[snakeLength];
-      for (int i=0; i<snakeLength; i++) {
+    for (int i=0; i<snakeLength; i++) {
       tempXs[i] = snakeXs[i];
     }
     for (int i=0; i<snakeLength; i++) {
@@ -97,6 +97,15 @@ class Snake {
     }
     for (int i=0; i<oldsnakelength; i++) {
       snakeYs[i] = tempYs[i] ;
+    }
+  }
+
+  void gamelost() {
+    for (int i=1; i<snakeLength; i++) {
+      if ((snakeXs[i] == snakeX) && (snakeYs[i] == snakeY)) {
+        println("lose");
+        gamelost = true;
+      }
     }
   }
 }
