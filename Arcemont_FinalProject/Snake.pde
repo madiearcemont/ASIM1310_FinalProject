@@ -1,24 +1,25 @@
 class Snake {
-  int xSpeed = 2;
+  int speed = 10;
+  int xSpeed = speed;
   int ySpeed = 0;
   boolean up = false;
   boolean down = false;
   boolean left = false;
   boolean right = false;
   int snakeSize = 20; //width of the snake
-  int snakeLength = 20; //length of the snake
+  int snakeLength = 10; //length of the snake
   float[] snakeXs = new float[snakeLength];
   float[] snakeYs = new float[snakeLength];
+  long time = 100;
 
-  //draw the snake (start with one square - appears randomly)
   void shiftDown() {
     for (int i = snakeLength - 1; i > 0; i--) {
       snakeXs[i]= snakeXs[i-1];
       snakeYs[i]= snakeYs[i-1];
     }
   }
+
   void drawSnake() {
-    shiftDown();
     for (int i = 0; i < snakeLength; i++) {
       fill(0, 225, 100);
       noStroke();
@@ -28,24 +29,26 @@ class Snake {
   }
 
   void moveSnake() {
+    shiftDown();
     snakeXs[0] = snakeX;
     snakeYs[0] = snakeY;
     snakeX = snakeX+xSpeed;
     snakeY = snakeY+ySpeed;
+    time += 100;
   }
 
   void checkDirection() {
     if (up == true) {
-      ySpeed = -2;
+      ySpeed = -speed;
       xSpeed = 0;
     } else if (down == true) {
-      ySpeed = 2;
+      ySpeed = speed;
       xSpeed = 0;
     } else if (right == true) {
-      xSpeed = 2;
+      xSpeed = speed;
       ySpeed = 0;
     } else if (left == true) {
-      xSpeed = -2;
+      xSpeed = -speed;
       ySpeed = 0;
     }
   }
@@ -53,16 +56,16 @@ class Snake {
   void checkEdges() {
     if (leftCollision()) {
       xSpeed = 0;
-      ySpeed = -2;
+      ySpeed = -speed;
     } else if (rightCollision()) {
       xSpeed = 0;
-      ySpeed = 2;
+      ySpeed = speed;
     } else if (topCollision()) {
       ySpeed = 0;
-      xSpeed = 2;
+      xSpeed = speed;
     } else if (bottomCollision()) {
       ySpeed = 0;
-      xSpeed = -2;
+      xSpeed = -speed;
     }
   }
 
@@ -97,6 +100,10 @@ class Snake {
     }
     for (int i=0; i<oldsnakelength; i++) {
       snakeYs[i] = tempYs[i] ;
+    }
+    for (int i = oldsnakelength; i < snakeLength; i++) {
+      snakeXs[i] = -100;
+      snakeYs[i] = -100;
     }
   }
 
